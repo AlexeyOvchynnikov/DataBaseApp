@@ -1,13 +1,13 @@
 ﻿
-using SQLite;
 using System;
+using SQLite;
 
 namespace DataBaseApp.Models
 {
     public class UserModel
     {
-
-        public string Id { get; set; }
+        [PrimaryKey]
+        public string UserId { get; set; }
 
         public string FirstName { get; set; }
 

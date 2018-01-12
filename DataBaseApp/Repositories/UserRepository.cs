@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DataBaseApp.Models;
-using DataBaseApp.Repositories.Interfaces;
+using DataBaseApp.Services.Interfaces;
 using SQLite;
 
 namespace DataBaseApp.Repositories
@@ -10,17 +10,20 @@ namespace DataBaseApp.Repositories
     public class UserRepository
     {
         private readonly SQLiteConnection _databaseConnection;
+        private readonly SQLiteAsyncConnection _databaseAsyncConnection;
 
-        public UserRepository(ISqLiteDbPath sqLiteDbPath)
+        public UserRepository(ISqLiteConnection sqLiteConnection)
         {
-            var path = sqLiteDbPath.GetDatabasePath("database.db");
-            _databaseConnection = new SQLiteConnection(path, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.SharedCache);
-            _databaseConnection.CreateTable<UserModel>();
+            _databaseAsyncConnection = sqLiteConnection.GetDatabaseAsyncConnection();
+            _databaseConnection = sqLiteConnection.GetDatabaseConnection();
+
+            var a = _databaseConnection.GetTableInfo("UserModel");
         }
         public bool InsertOrUpdate(UserModel item)
         {
             try
             {
+
                 _databaseConnection.InsertOrReplace(item);
                 return true;
             }
