@@ -26,37 +26,31 @@ namespace DataBaseApp.Services
         {
             _migrations = new List<IMigration>
             {
-                new Migration()
+                new Migration(),
+                new Migration1()
             };
         }
 
         public async Task<bool> RunMigrations()
         {
             // TODO run migrations in a transaction, otherwise, if and error is found, the app could stay in a horrible state
-            var result = false;
-            if (_settings.DatabaseVersion < _migrations.Count)
+
+            if (_settings.DatabaseVersion >= _migrations.Count) return false;
+            var count = 1;
+            foreach (var migration in _migrations)
             {
-
-                while (_settings.DatabaseVersion < _migrations.Count)
+                var success = await migration.UseConnection(_databaseAsyncConnection).Run();
+                if (count == _migrations.Count && success)
                 {
-                    var nextVersion = _settings.DatabaseVersion + 1;
-                    var success = await _migrations[nextVersion - 1].UseConnection(_databaseAsyncConnection).Run();
-
-                    if (success)
-                    {
-                        _settings.DatabaseVersion = nextVersion;
-                        result = true;
-                    }
-                    else
-                    {
-                        MvxTrace.Error("Migration process stopped after error found at {0}", _migrations[nextVersion - 1].GetType().Name);
-                        break;
-                    }
+                    _settings.DatabaseVersion = count;
+                    return true;
                 }
+
+                count++;
 
             }
 
-            return result;
+            return false;
         }
     }
 }

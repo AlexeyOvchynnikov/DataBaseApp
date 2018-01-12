@@ -37,6 +37,7 @@ namespace DataBaseApp.Services
                     }
                     catch (Exception ex)
                     {
+                        await Connection.ExecuteAsync("ROLLBACK;");
                         MvxTrace.Error("Command execution error: {0}", ex.Message);
                         throw ex;
                     }

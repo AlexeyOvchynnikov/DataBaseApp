@@ -4,7 +4,6 @@ using Autofac.Core;
 using DataBaseApp.Autofac;
 using DataBaseApp.Models;
 using DataBaseApp.Repositories;
-using DataBaseApp.Services;
 using DataBaseApp.Services.Interfaces;
 using Plugin.Settings;
 using Xamarin.Forms;
@@ -18,8 +17,9 @@ namespace DataBaseApp
         {
             DependencyContainer.Container = new DependenciesSetup().PrepareContainer(platformSpecificModule, new ApplicationModule());
             InitializeComponent();
-            //Migration();
-            Run();
+            //Run();
+            CrossSettings.Current.AddOrUpdateValue("DatabaseVersion", 0);
+            Migration();
 
 
             MainPage = new DataBaseAppPage();

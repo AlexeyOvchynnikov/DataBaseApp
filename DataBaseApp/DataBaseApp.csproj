@@ -51,6 +51,7 @@
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
     <Compile Include="Services\Interfaces\ISqLiteConnection.cs" />
     <Compile Include="Services\Interfaces\ISqLiteDbPath.cs" />
+    <Compile Include="Services\Migration1.cs" />
     <Compile Include="Services\Migration.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
